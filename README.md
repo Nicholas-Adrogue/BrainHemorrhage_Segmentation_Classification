@@ -278,15 +278,6 @@ The visualization tool displays side-by-side:
 
 ## 11. How to Run
 
-### Full Pipeline
-
-Run the complete segmentation and classification workflow:
-
-```bash
-cd /path/to/Project
-python hemorrhage_segmentation_unet.py
-```
-
 ### Segmentation Module
 
 #### Full segmentation pipeline (all steps):
@@ -357,6 +348,7 @@ python visualize_hints.py
 
 ## 12. Directory Structure
 
+### Classification
 ```
 dcms/
 ├── segmentation/
@@ -369,6 +361,52 @@ output/
 ├── arrow_hints/
 ├── arrow_viz/
 └── clip_embeddings.npz
+```
+
+### Segmentation
+```
+Project/
+├── Renders/                          ← raw CT window renders (input)
+│   ├── epidural/
+│   │   ├── brain_bone_window/
+│   │   ├── brain_window/
+│   │   ├── max_contrast_window/
+│   │   └── subdural_window/
+│   ├── intraparenchymal/             (same sub-dirs)
+│   ├── subarachnoid/
+│   ├── intraventricular/
+│   ├── multi/
+│   ├── subdural/
+│   └── normal/
+├── HemorrhageLabels/                 ← annotation CSVs + labels
+│   ├── hemorrhage-labels.csv
+│   ├── flagged.txt                   ← image IDs to exclude (one per line)
+│   ├── Results_Epidural Hemorrhage Detection_*.csv
+│   ├── Results_Intraparenchymal Hemorrhage Detection_*.csv
+│   ├── Results_Subarachnoid Hemorrhage Detection_*.csv
+│   ├── Results_Subdural Hemorrhage Detection_*.csv
+│   ├── Results_Multiple Hemorrhage Detection_*.csv
+│   └── Results_Brain Hemorrhage Tracing_*.csv
+├── great_results/                    ← all outputs (auto-created)
+│   ├── hemorrhage_unet.h5           ← best model weights
+│   ├── training_curves.png          ← loss / accuracy / MeanIoU plots
+│   ├── prediction_samples/          ← 4-panel overlay images
+│   ├── cached_arrays/               ← numpy arrays for fast reruns
+│   ├── test_results.txt             ← human-readable test summary
+│   ├── test_metrics.csv             ← overall test metrics
+│   ├── per_sample_iou.csv           ← per-image metrics
+│   └── confusion_matrix.png         ← pixel-level confusion matrix
+├── grid_results/                     ← hyperparameter search outputs
+│   ├── summary.csv                  ← comparison of all configurations
+│   └── dice<W>_bce<W>/             ← per-configuration subfolder
+│       ├── model.h5
+│       ├── training_curves.png
+│       ├── history.csv
+│       └── prediction_samples/
+├── hemorrhage_segmentation_unet.py   ← main pipeline
+├── grid_search.py                    ← hyperparameter grid search
+└── evaluate_test.py                  ← detailed test evaluation
+
 ```
 
 ---
